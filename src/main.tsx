@@ -1,11 +1,11 @@
-import React from 'react'
 import ReactDOM from 'react-dom'
-import './App.css'
-import App from './App'
+import './styles/App.css'
+import { RouterProvider } from 'react-router-dom'
+import router from 'routes'
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-)
+const WrappedApp = () => {
+    return (
+        <RouterProvider router={router} />
+    )
+}
+ReactDOM.render(<WrappedApp />, document.getElementById('root'))

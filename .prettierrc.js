@@ -1,12 +1,13 @@
-module.exports = {
-  printWidth: 80,
-  tabWidth: 2,
-  singleQuote: true,
-  quoteProps: 'as-needed',
-  trailingComma: 'none',
-  bracketSpacing: true,
-  semi: false,
-  useTabs: false,
-  bracketSameLine: false,
-  proseWrap: 'never'
-}
+// module.exports = {
+//   singleQuote: true,
+//   printWidth: 80,
+//   'editor.formatOnSave': true,
+//   proseWrap: 'always',
+//   tabWidth: 4,
+//   requireConfig: false,
+//   useTabs: false,
+//   trailingComma: 'none',
+//   bracketSpacing: true,
+//   jsxBracketSameLine: false,
+//   semi: true
+// };

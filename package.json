@@ -2,7 +2,7 @@
   "name": "vite-react-typescript-tailwind-starter",
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --port 3000",
     "build": "tsc && vite build",
     "serve": "vite preview --port 3000",
     "lint": "eslint . --ext .ts,.tsx,.js",
@@ -10,17 +10,21 @@
     "test": "jest"
   },
   "dependencies": {
+    "@types/react": "^18.0.33",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.10.0",
+    "vite-tsconfig-paths": "^4.0.8"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.4.3",
     "@commitlint/config-conventional": "^17.4.3",
-    "@heroicons/react": "^2.0.15",
+    "@heroicons/react": "2.0.15",
     "@tailwindcss/forms": "^0.5.3",
     "@types/jest": "^29.4.0",
     "@types/node": "18.13.0",
     "@types/react-dom": "^18.0.11",
+    "@types/react-router-dom": "^5.3.3",
     "@typescript-eslint/eslint-plugin": "^5.52.0",
     "@typescript-eslint/parser": "^5.52.0",
     "@vitejs/plugin-react": "^3.1.0",
