@@ -20,7 +20,7 @@ interface IClientList {
 const ClientList = (props: IClientList) => {
     const { setCurrentRoom } = props;
     return (
-        <nav className='bg-slate-100 min-w-[200px] min-h-[80%] m-4 p-4 flex flex-col gap-4 rounded shadow-xl'>
+        <nav className='bg-slate-100 col-span-1 min-h-[720px] p-4 flex flex-col gap-4 rounded shadow-xl'>
             <h1 className="text-xl text-slate-600">All Clients</h1>
             {
                 mockUserList.map(user => {

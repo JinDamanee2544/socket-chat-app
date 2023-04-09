@@ -53,7 +53,7 @@ const ChatRoom = (props: IChatRoom) => {
     }
 
     return (
-        <main className="flex-grow bg-slate-100 min-w-[300px] max-w-lg rounded m-4 min-h-[80%] flex flex-col gap-2 shadow-xl">
+        <main className="flex-grow bg-slate-100 col-span-2 rounded min-h-[720px] flex flex-col gap-2 shadow-xl">
             <header className='text-slate-100 bg-blue-600 py-3 px-4 rounded-t flex justify-between items-center'>
                 <div className='flex gap-8 items-center'>
                     <h1 className="text-2xl font-bold">{room.name}</h1>
