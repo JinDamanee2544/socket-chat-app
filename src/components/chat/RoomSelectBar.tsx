@@ -18,8 +18,8 @@ interface IRoomSelectBar {
 const RoomSelectBar = (props: IRoomSelectBar) => {
     const { setCurrentRoom } = props;
     return (
-        <nav className='bg-slate-100 min-w-[200px] min-h-[80%] m-4 p-4 flex flex-col gap-2 rounded'>
-            <h1 className="text-xl text-slate60">All Rooms</h1>
+        <nav className='bg-slate-100 min-w-[200px] min-h-[80%] m-4 p-4 flex flex-col gap-4 rounded'>
+            <h1 className="text-xl text-slate-600">All Rooms</h1>
             {
                 RoomList.map((room) => {
                     return (

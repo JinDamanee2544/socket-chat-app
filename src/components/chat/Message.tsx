@@ -1,7 +1,7 @@
-const mockImg = "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=300&h=300&q=80";
+import { User } from "types";
 
 interface IMessage {
-    author: string;
+    author: User;
     text: string;
     isOwner: boolean;
 }
@@ -14,10 +14,10 @@ const Message = (props: IMessage) => {
             <header className={`flex gap-2 items-center ${isOwner ? "flex-row-reverse" : ""}`}>
                 <img
                     className="ml-2 inline-block h-6 w-6 rounded-full ring-white"
-                    src={mockImg}
+                    src={author.image}
                     alt="Image Description"
                 />
-                <p className="text-base text-slate-600">{author}</p>
+                <p className="text-base text-slate-600">{author.name}</p>
             </header>
             <main className={`mt-2 py-3 px-4 rounded w-fit ${isOwner ? "bg-blue-600" : "bg-slate-200"}`}>
                 <p className={`text-md  ${isOwner ? "text-slate-100" : "text-slate-600"}`}>{text}</p>

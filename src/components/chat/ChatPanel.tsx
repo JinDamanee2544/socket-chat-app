@@ -1,7 +1,12 @@
-import type { Message as MesageType, Room } from 'types';
+import type { Message as MesageType, Room, User } from 'types';
 import Message from '@components/chat/Message'
+import { IoMdExit } from 'react-icons/io'
 
-const currentUser = 'John Doe'
+const currentUser: User = {
+    id: 1,
+    name: 'John Doe',
+    image: 'https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=300&h=300&q=80'
+}
 
 const mockMessages: MesageType = {
     id: 1,
@@ -14,7 +19,11 @@ const messages = [
     {
         ...mockMessages,
         id: 2,
-        author: 'Jane Doe',
+        author: {
+            ...currentUser,
+            id: 2,
+            name: 'Jane Doe',
+        },
     }, mockMessages, mockMessages
 ]
 
@@ -26,7 +35,10 @@ const ChatRoom = (props: IChatRoom) => {
     const { room } = props;
     return (
         <main className="flex-grow bg-slate-100 min-w-[300px] max-w-lg rounded m-4 min-h-[80%] flex flex-col gap-2">
-            <h1 className="text-2xl font-bold text-slate-100 bg-blue-600 py-3 px-4 rounded-t text-right">{room.name}</h1>
+            <header className='text-slate-100 bg-blue-600 py-3 px-4 rounded-t flex justify-between items-center'>
+                <h1 className="text-2xl font-bold ">{room.name}</h1>
+                <button className="inline-flex flex-shrink-0 justify-center items-center gap-2 h-8 w-8 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm "><IoMdExit size={24} /></button>
+            </header>
             <div className='flex flex-col p-6 gap-4 flex-grow overflow-x-auto h-10'>
                 {
                     messages.map((message) => {
@@ -43,7 +55,7 @@ const ChatRoom = (props: IChatRoom) => {
             </div>
             <div className='p-6 flex gap-2'>
                 <input type="text" className="py-3 px-4 block w-full border-slate-400 rounded-md text-sm focus:border-blue-600 focus:ring-blue-600 " />
-                <button type="button" className="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-600 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 transition-all text-sm dark:focus:ring-offset-gray-800">
+                <button type="button" className="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-600 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 transition-all text-sm ">
                     Send
                 </button>
             </div>
