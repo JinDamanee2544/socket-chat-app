@@ -1,13 +1,18 @@
 import Background from '@components/common/Background'
-import ChatPanel, { BlankRoom } from '@components/chat/ChatPanel';
-import RoomSelectBar from '@components/chat/RoomSelectBar';
-import { useState } from 'react';
+import ChatPanel from '@components/chat/ChatPanel';
+import RoomSelectBar from '@components/chat/RoomSelectPanel';
+import { useEffect, useState } from 'react';
 import { Room } from 'types';
 import ClientList from '@components/chat/ClientPanel';
+import BlankRoom from '@components/chat/BlankRoom';
 
 const Chat = () => {
-
     const [currentRoom, setCurrentRoom] = useState<Room | null>(null);
+
+    useEffect(() => {
+        console.log(currentRoom);
+        // TODO fetch chat history
+    }, [currentRoom]);
 
     return (
         <Background>
@@ -15,7 +20,7 @@ const Chat = () => {
             {
                 currentRoom ? <ChatPanel room={currentRoom} /> : <BlankRoom />
             }
-            <ClientList />
+            <ClientList setCurrentRoom={setCurrentRoom} />
         </Background>
     );
 };
