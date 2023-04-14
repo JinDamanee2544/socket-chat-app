@@ -1,16 +1,18 @@
-export type Message = {
-    id: number;
-    text: string;
-    author: User;
+export type IMessage = {
+    roomId: number;
+    username : string;
+    senderId: number;
+    content: string;
 }
 
-export type Room = {
+export type IRoom = {
     id: number;
     name: string;
+    clients: number[]; // user ids
 }
 
-export type User = {
+export type IUser = {
     id: number;
-    name: string;
-    image: string;
+    username: string;
+    accessToken: string;
 }

@@ -1,7 +1,7 @@
-import { User } from "types";
+import { IUser } from "types";
 
 interface IMessage {
-    author: User;
+    author: IUser;
     text: string;
     isOwner: boolean;
 }

@@ -1,7 +1,7 @@
-import { Room } from "types"
+import { IRoom } from "types"
 import { MdStart } from 'react-icons/md'
 
-const RoomList: Room[] = [
+const RoomList: IRoom[] = [
     {
         id: 1,
         name: 'Room 1',
@@ -13,7 +13,7 @@ const RoomList: Room[] = [
 ]
 
 interface IRoomSelectPanel {
-    setCurrentRoom: (room: Room) => void;
+    setCurrentRoom: (room: IRoom) => void;
 }
 
 const RoomSelectPanel = (props: IRoomSelectPanel) => {

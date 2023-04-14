@@ -1,6 +1,6 @@
-import { Room, User } from "types";
+import { IRoom, IUser } from "types";
 
-const mockUserList: User[] = [
+const mockUserList: IUser[] = [
     {
         id: 1,
         name: 'John Doe',
@@ -14,7 +14,7 @@ const mockUserList: User[] = [
 ]
 
 interface IClientList {
-    setCurrentRoom: (room: Room) => void;
+    setCurrentRoom: (room: IRoom) => void;
 }
 
 const ClientList = (props: IClientList) => {
