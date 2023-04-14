@@ -1,5 +1,4 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { IUser } from "types";
 
 interface IAuthContext {
@@ -22,16 +21,18 @@ export const useAuth = () => {
     return context
 }
 
+const authPath = ['/chat']
+
 export const AuthProvider = (props: IAuthProvider) => {
     const { children } = props;
 
     const [user, setUser] = useState<IUser>({} as IUser);
 
-    // useEffect(() => {
-    //     if (user.id === undefined) {
-    //         navigate("/login")
-    //     }
-    // }, [user])
+    useEffect(() => {
+        if (authPath.includes(window.location.pathname) && !user.id) {
+            window.location.href = '/login'
+        }
+    }, [user])
 
     return (
         <authContext.Provider value={{ user, setUser }}>
