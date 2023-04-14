@@ -1,39 +1,18 @@
-import type { IMessage as MesageType, IRoom, IUser } from 'types';
+import type { IMessage as MesageType, IRoom } from 'types';
 import Message from '@components/chat/Message'
 import { IoMdExit } from 'react-icons/io'
 import { useRef, useState } from 'react';
 import { FaUserAlt } from 'react-icons/fa'
-
-const currentUser: IUser = {
-    id: 1,
-    name: 'John Doe',
-    image: 'https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=300&h=300&q=80'
-}
-
-const mockMessagesList: MesageType[] = [
-    {
-        id: 1,
-        text: 'Hello World',
-        author: currentUser
-    },
-    {
-        id: 2,
-        text: 'Hello World',
-        author: {
-            id: 2,
-            name: 'Jane Doe',
-            image: 'https://images.unsplash.com/photo-1568602471122-7832951cc4c5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2&w=300&h=300&q=80'
-        }
-    }
-]
+import { useAuth } from 'context/auth';
 
 interface IChatRoom {
     room: IRoom;
 }
 
 const ChatRoom = (props: IChatRoom) => {
+    const { user } = useAuth();
     const { room } = props;
-    const [messages, setMessages] = useState<MesageType[]>(mockMessagesList);
+    const [messages, setMessages] = useState<MesageType[]>([]);
     const inputRef = useRef<HTMLInputElement>(null);
 
     const handleSendMessage = (e: React.SyntheticEvent) => {
@@ -42,9 +21,10 @@ const ChatRoom = (props: IChatRoom) => {
         if (!text) return;
 
         const newMessage: MesageType = {
-            id: messages.length + 1,
-            text: text,
-            author: currentUser
+            content: text,
+            username: user.username,
+            senderId: user.id,
+            roomId: room.id,
         }
         setMessages([
             ...messages,
@@ -66,13 +46,13 @@ const ChatRoom = (props: IChatRoom) => {
             </header>
             <div className='flex flex-col p-6 gap-4 flex-grow overflow-x-auto h-10'>
                 {
-                    messages.map((message) => {
+                    messages.map((message, id) => {
                         return (
                             <Message
-                                key={message.id}
-                                text={message.text}
-                                author={message.author}
-                                isOwner={currentUser.id === message.author.id}
+                                key={id}
+                                text={message.content}
+                                username={message.username}
+                                isOwner={user.id === message.senderId}
                             />
                         )
                     })

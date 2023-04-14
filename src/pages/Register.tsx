@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import apiClient from 'utils/apiClient';
+import { AxiosError } from 'axios'
+
 const Register = () => {
     const navigate = useNavigate()
 
@@ -22,7 +24,9 @@ const Register = () => {
             toast.success('Register success!');
             navigate('/login')
         }).catch((err) => {
-            toast.error(err.response.data.message);
+            if (err instanceof AxiosError) {
+                toast.error(err.response?.data.error);
+            }
         }
         );
     }

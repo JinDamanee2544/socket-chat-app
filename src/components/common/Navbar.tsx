@@ -1,18 +1,18 @@
+import { useAuth } from "context/auth";
 import { useNavigate } from "react-router-dom";
+import { FaUserAlt } from 'react-icons/fa'
 
 const Navbar = () => {
+    const { user } = useAuth();
+
     const navigate = useNavigate()
     return (
         <header className='bg-blue-600 col-span-4 text-slate-100 rounded p-4 flex justify-end'>
             <button className="flex gap-2 items-center"
                 onClick={() => navigate('/profile')}
             >
-                <h1 className='text-xl font-bold'>John Doe</h1>
-                <img
-                    className="ml-2 inline-block h-8 w-8 rounded-full ring-white"
-                    src={'https://i.pravatar.cc/300'}
-                    alt="Image Description"
-                />
+                <h1 className='text-xl font-bold'>{user.username}</h1>
+                <FaUserAlt size={24} />
             </button>
         </header>
     )

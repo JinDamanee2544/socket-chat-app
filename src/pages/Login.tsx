@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { IUser } from 'types';
 import apiClient from 'utils/apiClient';
 import { toast } from 'react-toastify';
+import { AxiosError } from 'axios'
 
 const Login = () => {
     const navigate = useNavigate()
@@ -25,7 +26,9 @@ const Login = () => {
             toast.success('Login success!');
             navigate('/chat')
         }).catch((err) => {
-            toast.error(err.response.data.message);
+            if (err instanceof AxiosError) {
+                toast.error(err.response?.data.error);
+            }
         });
     }
 
