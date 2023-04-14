@@ -22,7 +22,10 @@ const Login = () => {
         });
         respLoading.then((resp) => {
             const newUser: IUser = resp.data;
-            setUser(newUser)
+            setUser({
+                ...newUser,
+                email: email
+            })
             toast.success('Login success!');
             navigate('/chat')
         }).catch((err) => {

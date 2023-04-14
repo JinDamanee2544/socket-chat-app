@@ -13,6 +13,7 @@ export type IRoom = {
 
 export type IUser = {
     id: number;
+    email: string;
     username: string;
     accessToken: string;
 }

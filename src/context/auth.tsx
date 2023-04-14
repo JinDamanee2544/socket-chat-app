@@ -21,7 +21,7 @@ export const useAuth = () => {
     return context
 }
 
-const authPath = ['/chat']
+const authPath = ['/chat', '/profile']
 
 export const AuthProvider = (props: IAuthProvider) => {
     const { children } = props;
@@ -31,7 +31,9 @@ export const AuthProvider = (props: IAuthProvider) => {
     useEffect(() => {
         if (authPath.includes(window.location.pathname) && !user.id) {
             window.location.href = '/login'
+            return;
         }
+        console.log(user);
     }, [user])
 
     return (
