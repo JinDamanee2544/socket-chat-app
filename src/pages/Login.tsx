@@ -2,7 +2,7 @@ import Background from '@components/common/Background'
 import { useAuth } from 'context/auth';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { IUser } from 'types';
+import { IAuth, IUser } from 'types';
 import apiClient from 'utils/apiClient';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios'
@@ -21,9 +21,10 @@ const Login = () => {
             password: password
         });
         respLoading.then((resp) => {
-            const newUser: IUser = resp.data;
+            const newUser: IAuth = resp.data;
             setUser({
                 ...newUser,
+                id: Number(newUser.id),
                 email: email
             })
             toast.success('Login success!');

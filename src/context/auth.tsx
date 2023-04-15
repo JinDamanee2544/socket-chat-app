@@ -1,9 +1,9 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { IUser } from "types";
+import { IAuth } from "types";
 
 interface IAuthContext {
-    user: IUser;
-    setUser: (user: IUser) => void;
+    user: IAuth;
+    setUser: (user: IAuth) => void;
 }
 
 const authContext = createContext<IAuthContext>({} as IAuthContext);
@@ -23,17 +23,21 @@ export const useAuth = () => {
 
 const authPath = ['/chat', '/profile']
 
-export const AuthProvider = (props: IAuthProvider) => {
+const AuthProvider = (props: IAuthProvider) => {
     const { children } = props;
 
-    const [user, setUser] = useState<IUser>({} as IUser);
+    const [user, setUser] = useState<IAuth>({} as IAuth);
 
     useEffect(() => {
+        if (window.location.pathname === '/') {
+            window.location.href = '/login'
+            return;
+        }
+
         if (authPath.includes(window.location.pathname) && !user.id) {
             window.location.href = '/login'
             return;
         }
-        console.log(user);
     }, [user])
 
     return (
@@ -42,3 +46,5 @@ export const AuthProvider = (props: IAuthProvider) => {
         </authContext.Provider>
     );
 };
+
+export default AuthProvider;

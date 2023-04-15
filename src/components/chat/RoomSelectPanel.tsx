@@ -7,13 +7,13 @@ import { AxiosError } from 'axios'
 import { useAuth } from "context/auth";
 
 interface IRoomSelectPanel {
-    setCurrentRoom: (room: IRoom) => void;
+    openRoom: (room: IRoom) => void;
 }
 
 const RoomSelectPanel = (props: IRoomSelectPanel) => {
     const { user } = useAuth();
     const [roomList, setRoomList] = useState<IRoom[]>([]);
-    const { setCurrentRoom } = props;
+    const { openRoom } = props;
 
     useEffect(() => {
         const respLoading = apiClient.get('/ws/getRooms', {
@@ -23,7 +23,6 @@ const RoomSelectPanel = (props: IRoomSelectPanel) => {
         });
         respLoading.then((resp) => {
             setRoomList(resp.data);
-            toast.success('Rooms loaded successfully');
         }).catch((err) => {
             if (err instanceof AxiosError) {
                 toast.error(err.response?.data.error);
@@ -40,7 +39,7 @@ const RoomSelectPanel = (props: IRoomSelectPanel) => {
                         <button
                             key={room.id}
                             className='w-full py-3 px-4 rounded-md flex justify-between text-slate-100 bg-blue-600 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 transition-all text-sm'
-                            onClick={() => setCurrentRoom(room)}
+                            onClick={() => openRoom(room)}
                         >
                             {room.name}
                             <MdStart size={24} />

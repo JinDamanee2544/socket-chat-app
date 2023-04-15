@@ -1,17 +1,19 @@
 import type { IMessage as MesageType, IRoom } from 'types';
 import Message from '@components/chat/Message'
 import { IoMdExit } from 'react-icons/io'
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FaUserAlt } from 'react-icons/fa'
 import { useAuth } from 'context/auth';
+import { useWebSocket } from 'context/ws';
 
 interface IChatRoom {
-    room: IRoom;
+    currentRoom: IRoom;
 }
 
 const ChatRoom = (props: IChatRoom) => {
     const { user } = useAuth();
-    const { room } = props;
+    const { currentRoom } = props
+    const { conn } = useWebSocket();
     const [messages, setMessages] = useState<MesageType[]>([]);
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -24,7 +26,7 @@ const ChatRoom = (props: IChatRoom) => {
             content: text,
             username: user.username,
             senderId: user.id,
-            roomId: room.id,
+            roomId: currentRoom.id,
         }
         setMessages([
             ...messages,
@@ -32,11 +34,27 @@ const ChatRoom = (props: IChatRoom) => {
         ])
     }
 
+    useEffect(() => {
+        if (!conn) return;
+        conn.onmessage = (message) => {
+            console.log('message', message);
+        }
+        conn.onclose = () => {
+            console.log('disconnected')
+        }
+        conn.onerror = (e) => {
+            console.log('error', e)
+        }
+        conn.onopen = () => {
+            console.log('connected')
+        }
+    }, [messages])
+
     return (
         <main className="flex-grow bg-slate-100 col-span-2 rounded min-h-[720px] flex flex-col gap-2 shadow-xl">
             <header className='text-slate-100 bg-blue-600 py-3 px-4 rounded-t flex justify-between items-center'>
                 <div className='flex gap-8 items-center'>
-                    <h1 className="text-2xl font-bold">{room.name}</h1>
+                    <h1 className="text-2xl font-bold">{currentRoom.name}</h1>
                     <span className='flex gap-2'>
                         <FaUserAlt />
                         <h1 className='text-sm text-slate-200'>1/2 Online</h1>

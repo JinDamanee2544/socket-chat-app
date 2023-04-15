@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { IoArrowBackOutline } from 'react-icons/io5'
 import apiClient from 'utils/apiClient';
 import { toast } from 'react-toastify';
-import { IUser } from 'types';
+import { IAuth, IUser } from 'types';
 
 const Profile = () => {
     const { user, setUser } = useAuth();
@@ -25,7 +25,7 @@ const Profile = () => {
             }
         })
         respLoading.then((resp) => {
-            const newProfile: IUser = {
+            const newProfile: IAuth = {
                 ...user,
                 email: email,
                 username: username
@@ -50,7 +50,7 @@ const Profile = () => {
             }
         })
 
-        respLoading.then((resp) => {
+        respLoading.then(() => {
             toast.success('Update password success');
             navigate('/chat');
         }).catch((err) => {

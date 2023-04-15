@@ -8,12 +8,20 @@ export type IMessage = {
 export type IRoom = {
     id: number;
     name: string;
-    clients: number[]; // user ids
+    clients?: number[]; // user ids
 }
 
 export type IUser = {
     id: number;
     email: string;
     username: string;
-    accessToken: string;
 }
+
+export type IAuth = {
+    id: number;
+    email: string;
+    username: string;
+    accessToken: string
+}
+
+export type Conn = WebSocket | null

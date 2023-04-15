@@ -7,23 +7,38 @@ import ClientList from '@components/chat/ClientPanel';
 import BlankRoom from '@components/chat/BlankRoom';
 import Navbar from '@components/common/Navbar';
 import Footer from '@components/common/Footer';
+import { useWebSocket } from 'context/ws';
+import { useAuth } from 'context/auth';
+import { useRoom } from 'context/room';
+import { useClient } from 'context/client';
 
 const Chat = () => {
+    const { setConn } = useWebSocket()
+    const { user } = useAuth();
+    const { updateRoom } = useRoom();
+    const { updateClient } = useClient();
     const [currentRoom, setCurrentRoom] = useState<IRoom | null>(null);
 
+    const openRoom = (room: IRoom) => {
+        const ws = new WebSocket(`ws://localhost:8080/ws/joinRoom/${room.id}`);
+        setConn(ws)
+        setCurrentRoom(room);
+    }
+
     useEffect(() => {
-        // TODO fetch chat history
-    }, [currentRoom]);
+        updateRoom(user)
+        updateClient(user)
+    }, [])
 
     return (
         <Background>
             <div className='grid grid-cols-4 gap-x-8 gap-y-4 m-32'>
                 <Navbar />
-                <RoomSelectBar setCurrentRoom={setCurrentRoom} />
+                <RoomSelectBar openRoom={openRoom} />
                 {
-                    currentRoom ? <ChatPanel room={currentRoom} /> : <BlankRoom />
+                    currentRoom ? <ChatPanel currentRoom={currentRoom} /> : <BlankRoom />
                 }
-                <ClientList setCurrentRoom={setCurrentRoom} />
+                <ClientList openRoom={openRoom} />
                 <Footer />
             </div>
         </Background>
