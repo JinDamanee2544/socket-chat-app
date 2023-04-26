@@ -4,13 +4,13 @@ Academic project for the course "Computer Network I" about a chat application us
 
 ## Stack
 
-Frontend
+### Frontend
 
 - TypeScript
 - React
 - Vite
 - Tailwind
 
-Backend
+### Backend -> [Check that Repo](https://github.com/TikhampornSky/WebSocket)
 
 - golang
