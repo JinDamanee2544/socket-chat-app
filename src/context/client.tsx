@@ -7,6 +7,7 @@ interface IClientContext {
     client: IUser[];
     setClient: (user: IUser[]) => void;
     updateClient: (user: IAuth) => void;
+    clearClient: () => void;
 }
 
 const ClientContext = createContext<IClientContext>({} as IClientContext);
@@ -42,11 +43,22 @@ const ClientProvider = (props: IClientProvider) => {
         })
     }
 
+    const clearClient = () => {
+        setClient([])
+    }
+
+    const getUserById = (id: number) => {
+        const user = client.filter(user => user.id === id)[0]
+        return user
+    }
+
     return (
-        <ClientContext.Provider value={{ client, setClient, updateClient }}>
+        <ClientContext.Provider value={{ client, setClient, updateClient, clearClient }}>
             {children}
         </ClientContext.Provider>
     );
 };
 
 export default ClientProvider;
+
+

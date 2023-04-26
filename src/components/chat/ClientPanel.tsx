@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { IRoom, IUser } from "types";
 import { FaUserAlt } from 'react-icons/fa'
 import apiClient from "utils/apiClient";
@@ -15,16 +14,19 @@ const ClientList = (props: IClientList) => {
     const { openRoom } = props;
 
     const { user } = useAuth();
-    const { room } = useRoom();
+    const { room, updateRoom } = useRoom();
     const { client } = useClient();
 
-    const dmHandler = (toUser: IUser) => {
-        if (room.find(r => r.name === `DM to ${toUser.username}`)) {
+    const createDM = (toUser: IUser) => {
+        if (room.find(
+            r => r.name === `${user.username} - ${toUser.username}` ||
+                r.name === `${toUser.username} - ${user.username}`)) {
             toast.error('Room already opened')
             return;
         }
         const respLoading = apiClient.post('ws/createRoom', {
-            name: `DM to ${toUser.username}`
+            name: `${user.username} to ${toUser.username}`,
+            category: "private"
         }, {
             headers: {
                 Authorization: `Bearer ${user.accessToken}`
@@ -34,6 +36,7 @@ const ClientList = (props: IClientList) => {
         respLoading.then(resp => {
             const room: IRoom = resp.data;
             openRoom(room);
+            updateRoom(user)
         }).catch(err => {
             console.log(err)
             toast.error('Failed to open room')
@@ -50,10 +53,10 @@ const ClientList = (props: IClientList) => {
                             key={client.id}
                             className="flex gap-2 border-1 border-black"
                             disabled={client.id === user.id}
-                            onClick={() => dmHandler(client)}
+                            onClick={() => createDM(client)}
                         >
                             <FaUserAlt size={24} />
-                            <h1>{client.username}</h1>
+                            <h1>{client.username} {client.id === user.id ? "(Me)" : ""}</h1>
                         </button>
                     )
                 })

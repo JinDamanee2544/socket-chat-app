@@ -1,9 +1,12 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { IAuth } from "types";
+import { useRoom } from "./room";
+import { useClient } from "./client";
 
 interface IAuthContext {
     user: IAuth;
     setUser: (user: IAuth) => void;
+    logout: () => void;
 }
 
 const authContext = createContext<IAuthContext>({} as IAuthContext);
@@ -25,9 +28,10 @@ const authPath = ['/chat', '/profile']
 
 const AuthProvider = (props: IAuthProvider) => {
     const { children } = props;
+    const { clearRoom } = useRoom();
+    const { clearClient } = useClient();
 
     const [user, setUser] = useState<IAuth>({} as IAuth);
-
     useEffect(() => {
         if (window.location.pathname === '/') {
             window.location.href = '/login'
@@ -40,8 +44,14 @@ const AuthProvider = (props: IAuthProvider) => {
         }
     }, [user])
 
+    const logout = () => {
+        setUser({} as IAuth)
+        clearRoom();
+        clearClient();
+    }
+
     return (
-        <authContext.Provider value={{ user, setUser }}>
+        <authContext.Provider value={{ user, setUser, logout }}>
             {children}
         </authContext.Provider>
     );

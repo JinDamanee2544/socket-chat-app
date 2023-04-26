@@ -1,6 +1,6 @@
 import Background from '@components/common/Background'
 import ChatPanel from '@components/chat/ChatPanel';
-import RoomSelectBar from '@components/chat/RoomSelectPanel';
+import RoomSelectBar from '@components/chat/RoomPanel';
 import { useEffect, useState } from 'react';
 import { IRoom } from 'types';
 import ClientList from '@components/chat/ClientPanel';
@@ -12,6 +12,7 @@ import { useAuth } from 'context/auth';
 import { useRoom } from 'context/room';
 import { useClient } from 'context/client';
 
+
 const Chat = () => {
     const { setConn } = useWebSocket()
     const { user } = useAuth();
@@ -20,7 +21,7 @@ const Chat = () => {
     const [currentRoom, setCurrentRoom] = useState<IRoom | null>(null);
 
     const openRoom = (room: IRoom) => {
-        const ws = new WebSocket(`ws://localhost:8080/ws/joinRoom/${room.id}`);
+        const ws = new WebSocket(`ws://localhost:8080/ws/joinRoom/${room.id}`, user.accessToken);
         setConn(ws)
         setCurrentRoom(room);
     }

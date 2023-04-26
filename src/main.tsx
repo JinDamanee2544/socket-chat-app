@@ -9,6 +9,7 @@ import WebSocketProvider from 'context/ws'
 import RoomProvider from 'context/room'
 import ClientProvider from 'context/client'
 
+
 const WrappedApp = () => {
     return (
         <AuthProvider>

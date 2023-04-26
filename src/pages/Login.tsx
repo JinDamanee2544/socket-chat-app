@@ -2,14 +2,18 @@ import Background from '@components/common/Background'
 import { useAuth } from 'context/auth';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { IAuth, IUser } from 'types';
+import { IAuth } from 'types';
 import apiClient from 'utils/apiClient';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios'
+import { useRoom } from 'context/room';
+import { useClient } from 'context/client';
 
 const Login = () => {
     const navigate = useNavigate()
     const { setUser } = useAuth();
+    const { clearRoom } = useRoom()
+    const { clearClient } = useClient()
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -21,6 +25,8 @@ const Login = () => {
             password: password
         });
         respLoading.then((resp) => {
+            clearClient();
+            clearRoom();
             const newUser: IAuth = resp.data;
             setUser({
                 ...newUser,

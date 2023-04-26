@@ -57,7 +57,7 @@ const ChatRoom = (props: IChatRoom) => {
                     <h1 className="text-2xl font-bold">{currentRoom.name}</h1>
                     <span className='flex gap-2'>
                         <FaUserAlt />
-                        <h1 className='text-sm text-slate-200'>1/2 Online</h1>
+                        <h1 className='text-sm text-slate-200'>1/{currentRoom.clients?.length || 0} Online</h1>
                     </span>
                 </div>
                 <button className="inline-flex flex-shrink-0 justify-center items-center gap-2 h-8 w-8 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm "><IoMdExit size={24} /></button>

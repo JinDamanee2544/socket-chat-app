@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import { toast } from "react-toastify";
 import { IAuth, IRoom } from "types";
 import apiClient from "utils/apiClient";
@@ -7,6 +7,7 @@ interface IRoomContext {
     room: IRoom[];
     setRoom: (room: IRoom[]) => void;
     updateRoom: (user: IAuth) => void;
+    clearRoom: () => void;
 }
 
 const roomContext = createContext<IRoomContext>({} as IRoomContext);
@@ -33,17 +34,27 @@ const RoomProvider = (props: IRoomProvider) => {
                 Authorization: `Bearer ${user.accessToken}`
             }
         })
-        respRoomLoading.then(resp => {
-            const rooms: IRoom[] = resp.data;
-            setRoom(rooms)
+        const respDMLoading = apiClient.get('/ws/getDMs', {
+            headers: {
+                Authorization: `Bearer ${user.accessToken}`
+            }
+        })
+        const respLoading = Promise.all([respRoomLoading, respDMLoading])
+        respLoading.then(resp => {
+            const rooms: IRoom[] = resp[0].data;
+            const dms: IRoom[] = resp[1].data;
+            setRoom([...rooms, ...dms])
         }).catch(err => {
             console.log(err)
             toast.error('Failed to update rooms')
         })
     }
+    const clearRoom = () => {
+        setRoom([])
+    }
 
     return (
-        <roomContext.Provider value={{ room, setRoom, updateRoom }}>
+        <roomContext.Provider value={{ room, setRoom, updateRoom, clearRoom }}>
             {children}
         </roomContext.Provider>
     );
