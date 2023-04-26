@@ -37,7 +37,11 @@ const Chat = () => {
                 <Navbar />
                 <RoomSelectBar openRoom={openRoom} />
                 {
-                    currentRoom ? <ChatPanel currentRoom={currentRoom} /> : <BlankRoom />
+                    currentRoom ? <ChatPanel
+                        currentRoom={currentRoom}
+                        setCurrentRoom={setCurrentRoom}
+                    /> :
+                        <BlankRoom />
                 }
                 <ClientList openRoom={openRoom} />
                 <Footer />

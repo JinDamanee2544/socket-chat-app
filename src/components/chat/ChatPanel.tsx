@@ -1,43 +1,82 @@
-import type { IMessage as MesageType, IRoom } from 'types';
+import type { IMessage as MesageType, IRoom, IMessage } from 'types';
 import Message from '@components/chat/Message'
 import { IoMdExit } from 'react-icons/io'
 import { useEffect, useRef, useState } from 'react';
 import { FaUserAlt } from 'react-icons/fa'
 import { useAuth } from 'context/auth';
 import { useWebSocket } from 'context/ws';
+import apiClient from 'utils/apiClient';
+import { toast } from 'react-toastify';
+import { useRoom } from 'context/room';
 
 interface IChatRoom {
     currentRoom: IRoom;
+    setCurrentRoom: (room: IRoom | null) => void;
 }
 
 const ChatRoom = (props: IChatRoom) => {
+    const { currentRoom, setCurrentRoom } = props
+
+    const { updateRoom } = useRoom();
     const { user } = useAuth();
-    const { currentRoom } = props
     const { conn } = useWebSocket();
-    const [messages, setMessages] = useState<MesageType[]>([]);
+    const [messageList, setMessageList] = useState<MesageType[]>([]);
     const inputRef = useRef<HTMLInputElement>(null);
+
+    const leaveRoom = () => {
+        const respLoading = apiClient.get(`/ws/leaveRoom/${currentRoom.id}`, {
+            headers: {
+                Authorization: `Bearer ${user.accessToken}`
+            }
+        })
+        respLoading.then(() => {
+            toast.success('Leave room successfully')
+            setCurrentRoom(null)
+            updateRoom(user)
+        }).catch(() => {
+            toast.error('Leave room failed')
+        })
+    }
 
     const handleSendMessage = (e: React.SyntheticEvent) => {
         e.preventDefault()
         const text = inputRef.current?.value;
         if (!text) return;
-
-        const newMessage: MesageType = {
-            content: text,
-            username: user.username,
-            senderId: user.id,
-            roomId: currentRoom.id,
-        }
-        setMessages([
-            ...messages,
-            newMessage
-        ])
+        if (!conn) return;
+        conn.send(text)
+        inputRef.current.value = '';
     }
 
     useEffect(() => {
         if (!conn) return;
         conn.onmessage = (message) => {
-            console.log('message', message);
+
+            const m: IMessage = JSON.parse(message.data)
+            console.log(m);
+
+            if (m.content === 'A new user has joined the room') {
+                setMessageList([...messageList, {
+                    ...m,
+                    isAnnouncement: true
+                }])
+                return;
+            }
+
+            // create regex to match user: {} left the chat
+            const regex = /user: (.*) left the chat/
+
+            if (regex.test(m.content)) {
+                setMessageList([...messageList, {
+                    ...m,
+                    isAnnouncement: true
+                }])
+                return;
+            }
+            setMessageList([...messageList, m])
+        }
+
+        conn.onopen = () => {
+            console.log('connected')
         }
         conn.onclose = () => {
             console.log('disconnected')
@@ -45,10 +84,7 @@ const ChatRoom = (props: IChatRoom) => {
         conn.onerror = (e) => {
             console.log('error', e)
         }
-        conn.onopen = () => {
-            console.log('connected')
-        }
-    }, [messages])
+    }, [messageList])
 
     return (
         <main className="flex-grow bg-slate-100 col-span-2 rounded min-h-[720px] flex flex-col gap-2 shadow-xl">
@@ -60,17 +96,29 @@ const ChatRoom = (props: IChatRoom) => {
                         <h1 className='text-sm text-slate-200'>1/{currentRoom.clients?.length || 0} Online</h1>
                     </span>
                 </div>
-                <button className="inline-flex flex-shrink-0 justify-center items-center gap-2 h-8 w-8 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm "><IoMdExit size={24} /></button>
+                {
+                    // public room can leave
+                    currentRoom.category === 'public' ? (
+                        <button
+                            className="inline-flex flex-shrink-0 justify-center items-center gap-2 h-8 w-8 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm "
+                            onClick={leaveRoom}
+                        >
+                            <IoMdExit size={24} />
+                        </button>
+                    ) : null
+                }
+
             </header>
             <div className='flex flex-col p-6 gap-4 flex-grow overflow-x-auto h-10'>
                 {
-                    messages.map((message, id) => {
+                    messageList.map((message, id) => {
                         return (
                             <Message
                                 key={id}
                                 text={message.content}
                                 username={message.username}
                                 isOwner={user.id === message.senderId}
+                                isAnnouncement={message.isAnnouncement}
                             />
                         )
                     })

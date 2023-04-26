@@ -3,12 +3,14 @@ export type IMessage = {
     username : string;
     senderId: number;
     content: string;
+    isAnnouncement?: boolean;
 }
 
 export type IRoom = {
     id: number;
     name: string;
     clients?: number[]; // user ids
+    category: "public" | "private" ;
 }
 
 export type IUser = {

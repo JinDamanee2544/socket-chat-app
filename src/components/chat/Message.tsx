@@ -4,10 +4,17 @@ interface IMessage {
     username: string;
     text: string;
     isOwner: boolean;
+    isAnnouncement?: boolean;
 }
 
 const Message = (props: IMessage) => {
-    const { username, text, isOwner } = props;
+    const { username, text, isOwner, isAnnouncement } = props;
+
+    if (isAnnouncement) {
+        return (
+            <p className="text-center text-slate-600">{text}</p>
+        )
+    }
 
     return (
         <div className={`flex flex-col ${isOwner ? "items-end" : ""}`}>
