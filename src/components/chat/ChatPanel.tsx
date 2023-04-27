@@ -1,22 +1,20 @@
 import type { IMessage as MesageType, IMessage, IUser } from 'types';
 import Message from '@components/chat/Message'
 import { IoMdExit } from 'react-icons/io'
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FaUserAlt } from 'react-icons/fa'
 import { useAuth } from 'context/auth';
 import { useWebSocket } from 'context/ws';
-import apiClient from 'utils/apiClient';
-import { toast } from 'react-toastify';
 import { useRoom } from 'context/room';
 import { useClient } from 'context/client';
 
 interface IChatRoom {
     currentRoomId: number;
-    setCurrentRoomId: (id: number | null) => void;
+    leaveRoom: () => void;
 }
 
 const ChatRoom = (props: IChatRoom) => {
-    const { currentRoomId, setCurrentRoomId } = props
+    const { currentRoomId, leaveRoom } = props
 
     const { updateRoom } = useRoom();
     const { getParticipants } = useClient()
@@ -29,20 +27,10 @@ const ChatRoom = (props: IChatRoom) => {
     // const currRoom = useMemo(() => getRoom(currentRoomId), [currentRoomId])
     const currRoom = getRoom(currentRoomId) // easy refresh
 
-    const leaveRoom = () => {
-        const respLoading = apiClient.get(`/ws/leaveRoom/${currentRoomId}`, {
-            headers: {
-                Authorization: `Bearer ${user.accessToken}`
-            }
-        })
-        respLoading.then(() => {
-            toast.success('Leave room successfully')
-            setCurrentRoomId(null)
-            updateRoom(user)
-        }).catch(() => {
-            toast.error('Leave room failed')
-        })
-    }
+    console.log(messageList);
+
+
+
 
     const handleSendMessage = (e: React.SyntheticEvent) => {
         e.preventDefault()
@@ -56,7 +44,6 @@ const ChatRoom = (props: IChatRoom) => {
     useEffect(() => {
         if (!conn) return;
         conn.onmessage = (message) => {
-
             const m: IMessage = JSON.parse(message.data)
             console.log(m);
 
@@ -91,14 +78,14 @@ const ChatRoom = (props: IChatRoom) => {
         conn.onerror = (e) => {
             console.log('error', e)
         }
-    }, [messageList])
+    }, [messageList, conn])
 
     useEffect(() => {
-        console.log('refresh room');
-        console.log('current room', currRoom);
+        // console.log('refresh room');
+        // console.log('current room', currRoom);
         if (currRoom) {
             const res = getParticipants(currRoom.clients!)
-            console.log('new participant', res);
+            // console.log('new participant', res);
             setParticipants(res)
         }
     }, [room])

@@ -11,6 +11,8 @@ import { useWebSocket } from 'context/ws';
 import { useAuth } from 'context/auth';
 import { useRoom } from 'context/room';
 import { useClient } from 'context/client';
+import apiClient from 'utils/apiClient';
+import { toast } from 'react-toastify';
 
 
 const Chat = () => {
@@ -22,9 +24,26 @@ const Chat = () => {
 
     const openRoom = (room: IRoom) => {
         const ws = new WebSocket(`ws://localhost:8080/ws/joinRoom/${room.id}`, user.accessToken);
+        console.log(ws);
         setConn(ws)
         updateRoom(user)
         setCurrentRoomId(room.id)
+    }
+
+    const leaveRoom = () => {
+        const respLoading = apiClient.get(`/ws/leaveRoom/${currentRoomId}`, {
+            headers: {
+                Authorization: `Bearer ${user.accessToken}`
+            }
+        })
+        respLoading.then(() => {
+            console.log('leave room success');
+            toast.success('Leave room successfully')
+            setCurrentRoomId(null)
+            updateRoom(user)
+        }).catch(() => {
+            toast.error('Leave room failed')
+        })
     }
 
     useEffect(() => {
@@ -35,12 +54,12 @@ const Chat = () => {
     return (
         <Background>
             <div className='grid grid-cols-4 gap-x-8 gap-y-4 m-32'>
-                <Navbar />
+                <Navbar leaveRoom={leaveRoom} />
                 <RoomSelectBar openRoom={openRoom} />
                 {
                     currentRoomId ? <ChatPanel
                         currentRoomId={currentRoomId}
-                        setCurrentRoomId={setCurrentRoomId}
+                        leaveRoom={leaveRoom}
                     /> :
                         <BlankRoom />
                 }

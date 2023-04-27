@@ -46,8 +46,8 @@ const AuthProvider = (props: IAuthProvider) => {
 
     const logout = () => {
         setUser({} as IAuth)
-        clearRoom();
-        clearClient();
+        // clearRoom();
+        // clearClient();
     }
 
     return (
