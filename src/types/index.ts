@@ -9,7 +9,7 @@ export type IMessage = {
 export type IRoom = {
     id: number;
     name: string;
-    clients?: number[]; // user ids
+    clients: number[]; // user ids
     category: "public" | "private" ;
 }
 

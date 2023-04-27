@@ -1,18 +1,17 @@
 import { IRoom } from "types"
 import { MdStart } from 'react-icons/md'
-import { useEffect, useRef, useState } from "react";
 import apiClient from "utils/apiClient";
 import { toast } from 'react-toastify'
-import { AxiosError } from 'axios'
 import { useAuth } from "context/auth";
 import { useRoom } from "context/room";
+import { useRef } from "react";
 
 interface IRoomSelectPanel {
     openRoom: (room: IRoom) => void;
 }
 
 const RoomSelectPanel = (props: IRoomSelectPanel) => {
-    const { room, updateRoom } = useRoom();
+    const { room } = useRoom();
     const { user } = useAuth();
     const { openRoom } = props;
     const inputRef = useRef<HTMLInputElement>(null);
@@ -33,7 +32,6 @@ const RoomSelectPanel = (props: IRoomSelectPanel) => {
         respLoading.then(resp => {
             const room: IRoom = resp.data;
             openRoom(room);
-            updateRoom(user);
         }).catch(() => {
             toast.error('Failed to create room')
         })
@@ -52,7 +50,8 @@ const RoomSelectPanel = (props: IRoomSelectPanel) => {
                                     className='w-full py-3 px-4 rounded-md flex justify-between text-slate-100 bg-blue-600 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 transition-all text-sm'
                                     onClick={() => openRoom(room)}
                                 >
-                                    {room.name} ({room.clients?.length || 0})
+                                    {room.name}
+                                    {/* ({room.clients?.length || 0}) */}
                                     <MdStart size={24} />
                                 </button>
                             )

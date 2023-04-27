@@ -8,6 +8,7 @@ interface IClientContext {
     setClient: (user: IUser[]) => void;
     updateClient: (user: IAuth) => void;
     clearClient: () => void;
+    getParticipants: (participants: number[]) => IUser[];
 }
 
 const ClientContext = createContext<IClientContext>({} as IClientContext);
@@ -47,13 +48,19 @@ const ClientProvider = (props: IClientProvider) => {
         setClient([])
     }
 
-    const getUserById = (id: number) => {
+    const getUserById = (id: number): IUser => {
         const user = client.filter(user => user.id === id)[0]
+        if (!user) throw new Error('User not found')
         return user
     }
 
+    const getParticipants = (participants: number[]): IUser[] => {
+        const users = participants.map(participant => getUserById(participant))
+        return users
+    }
+
     return (
-        <ClientContext.Provider value={{ client, setClient, updateClient, clearClient }}>
+        <ClientContext.Provider value={{ client, setClient, updateClient, clearClient, getParticipants }}>
             {children}
         </ClientContext.Provider>
     );

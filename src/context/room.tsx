@@ -8,6 +8,7 @@ interface IRoomContext {
     setRoom: (room: IRoom[]) => void;
     updateRoom: (user: IAuth) => void;
     clearRoom: () => void;
+    getRoom: (id: number) => IRoom | undefined;
 }
 
 const roomContext = createContext<IRoomContext>({} as IRoomContext);
@@ -53,8 +54,14 @@ const RoomProvider = (props: IRoomProvider) => {
         setRoom([])
     }
 
+    const getRoom = (roomId: number) => {
+        const res = room.find(room => room.id === roomId)
+        if (!res) return undefined;
+        return res;
+    }
+
     return (
-        <roomContext.Provider value={{ room, setRoom, updateRoom, clearRoom }}>
+        <roomContext.Provider value={{ room, setRoom, updateRoom, clearRoom, getRoom }}>
             {children}
         </roomContext.Provider>
     );

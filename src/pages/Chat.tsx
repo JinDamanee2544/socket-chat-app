@@ -18,12 +18,13 @@ const Chat = () => {
     const { user } = useAuth();
     const { updateRoom } = useRoom();
     const { updateClient } = useClient();
-    const [currentRoom, setCurrentRoom] = useState<IRoom | null>(null);
+    const [currentRoomId, setCurrentRoomId] = useState<number | null>(null);
 
     const openRoom = (room: IRoom) => {
         const ws = new WebSocket(`ws://localhost:8080/ws/joinRoom/${room.id}`, user.accessToken);
         setConn(ws)
-        setCurrentRoom(room);
+        updateRoom(user)
+        setCurrentRoomId(room.id)
     }
 
     useEffect(() => {
@@ -37,9 +38,9 @@ const Chat = () => {
                 <Navbar />
                 <RoomSelectBar openRoom={openRoom} />
                 {
-                    currentRoom ? <ChatPanel
-                        currentRoom={currentRoom}
-                        setCurrentRoom={setCurrentRoom}
+                    currentRoomId ? <ChatPanel
+                        currentRoomId={currentRoomId}
+                        setCurrentRoomId={setCurrentRoomId}
                     /> :
                         <BlankRoom />
                 }

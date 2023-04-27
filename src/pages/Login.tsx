@@ -30,7 +30,7 @@ const Login = () => {
             const newUser: IAuth = resp.data;
             setUser({
                 ...newUser,
-                id: Number(newUser.id),
+                id: newUser.id,
                 email: email
             })
             toast.success('Login success!');

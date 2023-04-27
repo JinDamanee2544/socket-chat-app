@@ -14,13 +14,13 @@ const ClientList = (props: IClientList) => {
     const { openRoom } = props;
 
     const { user } = useAuth();
-    const { room, updateRoom } = useRoom();
+    const { room } = useRoom();
     const { client } = useClient();
 
     const createDM = (toUser: IUser) => {
         if (room.find(
-            r => r.name === `${user.username} - ${toUser.username}` ||
-                r.name === `${toUser.username} - ${user.username}`)) {
+            r => r.name === `${user.username} to ${toUser.username}` ||
+                r.name === `${toUser.username} to ${user.username}`)) {
             toast.error('Room already opened')
             return;
         }
@@ -36,7 +36,6 @@ const ClientList = (props: IClientList) => {
         respLoading.then(resp => {
             const room: IRoom = resp.data;
             openRoom(room);
-            updateRoom(user)
         }).catch(err => {
             console.log(err)
             toast.error('Failed to open room')
@@ -47,16 +46,16 @@ const ClientList = (props: IClientList) => {
         <nav className='bg-slate-100 col-span-1 min-h-[720px] p-4 flex flex-col gap-4 rounded shadow-xl'>
             <h1 className="text-xl text-slate-600">All Clients</h1>
             {
-                client.map(client => {
+                client.map(c => {
                     return (
                         <button
-                            key={client.id}
+                            key={c.id}
                             className="flex gap-2 border-1 border-black"
-                            disabled={client.id === user.id}
-                            onClick={() => createDM(client)}
+                            disabled={c.id === user.id}
+                            onClick={() => createDM(c)}
                         >
                             <FaUserAlt size={24} />
-                            <h1>{client.username} {client.id === user.id ? "(Me)" : ""}</h1>
+                            <h1>{c.username} {c.id === user.id ? "(Me)" : ""}</h1>
                         </button>
                     )
                 })
