@@ -13,6 +13,10 @@ interface IChatRoom {
     leaveRoom: () => void;
 }
 
+const regexJoin = /(.*) has joined the room/
+const regexExit = /(.*) left the room/
+
+
 const ChatRoom = (props: IChatRoom) => {
     const { currentRoomId, leaveRoom } = props
 
@@ -24,13 +28,7 @@ const ChatRoom = (props: IChatRoom) => {
     const inputRef = useRef<HTMLInputElement>(null);
     const [messageList, setMessageList] = useState<MesageType[]>([]);
     const [participants, setParticipants] = useState<IUser[]>([])
-    // const currRoom = useMemo(() => getRoom(currentRoomId), [currentRoomId])
     const currRoom = getRoom(currentRoomId) // easy refresh
-
-    console.log(messageList);
-
-
-
 
     const handleSendMessage = (e: React.SyntheticEvent) => {
         e.preventDefault()
@@ -45,9 +43,6 @@ const ChatRoom = (props: IChatRoom) => {
         if (!conn) return;
         conn.onmessage = (message) => {
             const m: IMessage = JSON.parse(message.data)
-            console.log(m);
-
-            const regexJoin = /(.*) has joined the room/
             if (regexJoin.test(m.content)) {
                 setMessageList([...messageList, {
                     ...m,
@@ -56,8 +51,6 @@ const ChatRoom = (props: IChatRoom) => {
                 updateRoom(user)
                 return;
             }
-
-            const regexExit = /(.*) left the room/
             if (regexExit.test(m.content)) {
                 setMessageList([...messageList, {
                     ...m,
@@ -70,9 +63,11 @@ const ChatRoom = (props: IChatRoom) => {
         }
 
         conn.onopen = () => {
+            setMessageList([])
             console.log('connected')
         }
         conn.onclose = () => {
+            setMessageList([])
             console.log('disconnected')
         }
         conn.onerror = (e) => {
@@ -80,19 +75,17 @@ const ChatRoom = (props: IChatRoom) => {
         }
     }, [messageList, conn])
 
+    // update online status
     useEffect(() => {
-        // console.log('refresh room');
-        // console.log('current room', currRoom);
         if (currRoom) {
             const res = getParticipants(currRoom.clients!)
-            // console.log('new participant', res);
             setParticipants(res)
         }
     }, [room])
 
     return (
         <main className="flex-grow bg-slate-100 col-span-2 rounded min-h-[720px] flex flex-col gap-2 shadow-xl">
-            <header className='text-slate-100 bg-blue-600 py-3 px-4 rounded-t flex justify-between items-center'>
+            <header className='text-slate-100 drop-shadow-lg bg-blue-600 py-3 px-4 rounded-t flex justify-between items-center'>
                 <div className='flex gap-8 items-center'>
                     <h1 className="text-2xl font-bold">{currRoom?.name || undefined}</h1>
                     <span className='group flex gap-2 relative'>
@@ -119,7 +112,7 @@ const ChatRoom = (props: IChatRoom) => {
                     // public room can leave
                     currRoom?.category === 'public' ? (
                         <button
-                            className="inline-flex flex-shrink-0 justify-center items-center gap-2 h-8 w-8 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm "
+                            className="inline-flex flex-shrink-0 justify-center items-center gap-2 h-8 w-8 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm "
                             onClick={leaveRoom}
                         >
                             <IoMdExit size={24} />
@@ -151,7 +144,7 @@ const ChatRoom = (props: IChatRoom) => {
                 />
                 <button
                     type="submit"
-                    className="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-600 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 transition-all text-sm "
+                    className="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-600 text-white hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 transition-all text-sm "
                     onClick={handleSendMessage}
                 >
                     Send

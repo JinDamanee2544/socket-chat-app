@@ -2,23 +2,21 @@ import { useAuth } from "context/auth";
 import { useNavigate } from "react-router-dom";
 import { FaUserAlt } from 'react-icons/fa'
 import { MdOutlineExitToApp } from 'react-icons/md'
+import { useWebSocket } from "context/ws";
 
-interface NavbarProps {
-    leaveRoom: () => void
-}
 
-const Navbar = (props: NavbarProps) => {
-    const { leaveRoom } = props;
+const Navbar = () => {
     const { user, logout } = useAuth();
+    const { clearConn } = useWebSocket()
     const navigate = useNavigate()
 
     const logoutHandler = () => {
-        leaveRoom();
+        clearConn()
         logout();
     }
 
     const profileHandler = () => {
-        leaveRoom();
+        clearConn()
         navigate('/profile')
     }
 

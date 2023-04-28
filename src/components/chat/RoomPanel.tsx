@@ -22,7 +22,6 @@ const RoomSelectPanel = (props: IRoomSelectPanel) => {
 
         const respLoading = apiClient.post('ws/createRoom', {
             name: inputRef.current.value,
-            category: 'public'
         }, {
             headers: {
                 Authorization: `Bearer ${user.accessToken}`
@@ -30,6 +29,7 @@ const RoomSelectPanel = (props: IRoomSelectPanel) => {
         })
 
         respLoading.then(resp => {
+            inputRef!.current!.value = '';
             const room: IRoom = resp.data;
             openRoom(room);
         }).catch(() => {
@@ -47,7 +47,7 @@ const RoomSelectPanel = (props: IRoomSelectPanel) => {
                             return (
                                 <button
                                     key={room.id}
-                                    className='w-full py-3 px-4 rounded-md flex justify-between text-slate-100 bg-blue-600 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 transition-all text-sm'
+                                    className=' w-full shadow-lg py-3 px-4 rounded-md flex justify-between text-slate-100 bg-blue-600 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 transition-all text-sm'
                                     onClick={() => openRoom(room)}
                                 >
                                     {room.name}
@@ -66,7 +66,7 @@ const RoomSelectPanel = (props: IRoomSelectPanel) => {
                     />
                     <button
                         type="submit"
-                        className="p-2 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-600 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 transition-all text-sm "
+                        className="p-2 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-600 text-white hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 transition-all text-sm "
                         onClick={createPublicRoom}
                     >
                         Create Room

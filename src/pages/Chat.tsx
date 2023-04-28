@@ -16,7 +16,7 @@ import { toast } from 'react-toastify';
 
 
 const Chat = () => {
-    const { setConn } = useWebSocket()
+    const { setNewConn } = useWebSocket()
     const { user } = useAuth();
     const { updateRoom } = useRoom();
     const { updateClient } = useClient();
@@ -24,13 +24,13 @@ const Chat = () => {
 
     const openRoom = (room: IRoom) => {
         const ws = new WebSocket(`ws://localhost:8080/ws/joinRoom/${room.id}`, user.accessToken);
-        console.log(ws);
-        setConn(ws)
+        setNewConn(ws)
         updateRoom(user)
         setCurrentRoomId(room.id)
     }
 
     const leaveRoom = () => {
+        if (!currentRoomId) return;
         const respLoading = apiClient.get(`/ws/leaveRoom/${currentRoomId}`, {
             headers: {
                 Authorization: `Bearer ${user.accessToken}`
@@ -54,7 +54,7 @@ const Chat = () => {
     return (
         <Background>
             <div className='grid grid-cols-4 gap-x-8 gap-y-4 m-32'>
-                <Navbar leaveRoom={leaveRoom} />
+                <Navbar />
                 <RoomSelectBar openRoom={openRoom} />
                 {
                     currentRoomId ? <ChatPanel

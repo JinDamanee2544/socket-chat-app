@@ -24,9 +24,9 @@ const ClientList = (props: IClientList) => {
             toast.error('Room already opened')
             return;
         }
-        const respLoading = apiClient.post('ws/createRoom', {
-            name: `${user.username} to ${toUser.username}`,
-            category: "private"
+        const respLoading = apiClient.post('ws/createDM', {
+            room_name: `${user.username} to ${toUser.username}`,
+            partner_id: toUser.id
         }, {
             headers: {
                 Authorization: `Bearer ${user.accessToken}`
@@ -43,14 +43,14 @@ const ClientList = (props: IClientList) => {
     }
 
     return (
-        <nav className='bg-slate-100 col-span-1 min-h-[720px] p-4 flex flex-col gap-4 rounded shadow-xl'>
+        <nav className='bg-slate-100 col-span-1 min-h-[720px] p-4 flex flex-col gap-2 rounded shadow-xl'>
             <h1 className="text-xl text-slate-600">All Clients</h1>
             {
                 client.map(c => {
                     return (
                         <button
                             key={c.id}
-                            className="flex gap-2 border-1 border-black"
+                            className={`flex gap-1 px-2 py-3 duration-200 rounded ${c.id !== user.id ? "hover:bg-slate-200" : ""}`}
                             disabled={c.id === user.id}
                             onClick={() => createDM(c)}
                         >

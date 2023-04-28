@@ -3,7 +3,8 @@ import { Conn } from "types";
 
 interface IWebSocketContext {
     conn: Conn;
-    setConn: (conn: Conn) => void;
+    setNewConn: (conn: Conn) => void;
+    clearConn: () => void;
 }
 
 const WebSocketContext = createContext<IWebSocketContext>({} as IWebSocketContext);
@@ -20,14 +21,37 @@ interface IWebSocketProvider {
     children: React.ReactNode;
 }
 
+
 const WebSocketProvider = (props: IWebSocketProvider) => {
     const { children } = props;
     const [conn, setConn] = useState<Conn>(null);
+    // const { user } = useAuth();
+    // const [connList, setConnList] = useState<connDict>({});
+
+    // const switchToConn = (roomId: number) => {
+    //     if (connList[roomId]) {
+    //         setConn(connList[roomId])
+    //     }
+    //     const ws = new WebSocket(`ws://localhost:8080/ws/joinRoom/${roomId}`, user.accessToken);
+    //     setConn(ws)
+    // }
+
+    const setNewConn = (newConn: Conn) => {
+        console.log(conn?.url, '--->', newConn?.url);
+        conn?.close()
+        setConn(newConn)
+    }
+
+    const clearConn = () => {
+        conn?.close()
+        setConn(null)
+    }
 
     return (
         <WebSocketContext.Provider value={{
             conn,
-            setConn
+            setNewConn,
+            clearConn
         }}>
             {children}
         </WebSocketContext.Provider>
