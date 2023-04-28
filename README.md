@@ -2,6 +2,8 @@
 
 Academic project for the course "Computer Network I" about a chat application using websockets.
 
+![Screenshot](./public/screenshot.png)
+
 ## Stack
 
 ### Frontend
@@ -10,7 +12,10 @@ Academic project for the course "Computer Network I" about a chat application us
 - React
 - Vite
 - Tailwind
+- PrelineUI
 
-### Backend -> [Check that Repo](https://github.com/TikhampornSky/WebSocket)
+### Backend
 
-- golang
+- Golang
+
+[Go Check the Backend's Repo](https://github.com/TikhampornSky/WebSocket)
