@@ -4,6 +4,21 @@ Academic project for the course "Computer Network I" about a chat application us
 
 ![Screenshot](./public/screenshot.png)
 
+## Installation
+
+```bash
+    git clone https://github.com/JinDamanee2544/socket-chat-app
+    pnpm install
+    pnpm dev
+```
+
+## Usage
+
+```bash
+    pnpm build
+    pnpm start
+```
+
 ## Stack
 
 ### Frontend
