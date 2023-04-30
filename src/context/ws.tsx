@@ -1,9 +1,11 @@
 import { createContext, useContext, useState } from "react";
 import { Conn } from "types";
+import { useAuth } from "./auth";
+import { VITE_BACKEND_BASE_URL } from 'utils/apiClient'
 
 interface IWebSocketContext {
     conn: Conn;
-    setNewConn: (conn: Conn) => void;
+    setNewConn: (roomId: number) => void;
     clearConn: () => void;
 }
 
@@ -25,21 +27,13 @@ interface IWebSocketProvider {
 const WebSocketProvider = (props: IWebSocketProvider) => {
     const { children } = props;
     const [conn, setConn] = useState<Conn>(null);
-    // const { user } = useAuth();
-    // const [connList, setConnList] = useState<connDict>({});
+    const { user } = useAuth();
 
-    // const switchToConn = (roomId: number) => {
-    //     if (connList[roomId]) {
-    //         setConn(connList[roomId])
-    //     }
-    //     const ws = new WebSocket(`ws://localhost:8080/ws/joinRoom/${roomId}`, user.accessToken);
-    //     setConn(ws)
-    // }
-
-    const setNewConn = (newConn: Conn) => {
-        console.log(conn?.url, '--->', newConn?.url);
+    const setNewConn = (roomId: number) => {
+        const newWsConn = new WebSocket(`ws://${VITE_BACKEND_BASE_URL}/ws/joinRoom/${roomId}`, user.accessToken);
+        console.log(conn?.url, '--->', newWsConn?.url);
         conn?.close()
-        setConn(newConn)
+        setConn(newWsConn)
     }
 
     const clearConn = () => {

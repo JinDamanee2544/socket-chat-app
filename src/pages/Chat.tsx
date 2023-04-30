@@ -14,7 +14,6 @@ import { useClient } from 'context/client';
 import apiClient from 'utils/apiClient';
 import { toast } from 'react-toastify';
 
-
 const Chat = () => {
     const { setNewConn } = useWebSocket()
     const { user } = useAuth();
@@ -23,8 +22,7 @@ const Chat = () => {
     const [currentRoomId, setCurrentRoomId] = useState<number | null>(null);
 
     const openRoom = (room: IRoom) => {
-        const ws = new WebSocket(`ws://localhost:8080/ws/joinRoom/${room.id}`, user.accessToken);
-        setNewConn(ws)
+        setNewConn(room.id)
         updateRoom(user)
         setCurrentRoomId(room.id)
     }
