@@ -5,10 +5,10 @@ import { useNavigate } from 'react-router-dom';
 import { IoArrowBackOutline } from 'react-icons/io5'
 import apiClient from 'utils/apiClient';
 import { toast } from 'react-toastify';
-import { IAuth, IUser } from 'types';
+import { IAuth } from 'types';
 
 const Profile = () => {
-    const { user, setUser } = useAuth();
+    const { user, setUser, logout } = useAuth();
     const [email, setEmail] = useState(user.email || '');
     const [username, setUsername] = useState(user.username || "");
     const [password, setPassword] = useState('');
@@ -24,7 +24,7 @@ const Profile = () => {
                 Authorization: `Bearer ${user.accessToken}`
             }
         })
-        respLoading.then((resp) => {
+        respLoading.then(() => {
             const newProfile: IAuth = {
                 ...user,
                 email: email,
@@ -32,7 +32,8 @@ const Profile = () => {
             }
             setUser(newProfile);
             toast.success('Update profile success');
-            navigate('/chat');
+            navigate('/login');
+            logout();
         }).catch((err) => {
             console.log(err);
             toast.error('Update profile failed');
@@ -52,7 +53,8 @@ const Profile = () => {
 
         respLoading.then(() => {
             toast.success('Update password success');
-            navigate('/chat');
+            navigate('/login');
+            logout();
         }).catch((err) => {
             console.log(err);
             toast.error('Update password failed');

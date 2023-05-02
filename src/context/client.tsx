@@ -50,7 +50,7 @@ const ClientProvider = (props: IClientProvider) => {
 
     const getUserById = (id: number): IUser => {
         const user = client.filter(user => user.id === id)[0]
-        if (!user) throw new Error('User not found')
+        // if (!user) throw new Error('User not found')
         return user
     }
 

@@ -28,8 +28,8 @@ const authPath = ['/chat', '/profile']
 
 const AuthProvider = (props: IAuthProvider) => {
     const { children } = props;
-    const { clearRoom } = useRoom();
-    const { clearClient } = useClient();
+    // const { clearRoom } = useRoom();
+    // const { clearClient } = useClient();
 
     const [user, setUser] = useState<IAuth>({} as IAuth);
     useEffect(() => {
